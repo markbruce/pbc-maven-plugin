@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- generate by winning-pbc maven plugin at ${.now} -->
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.winning.wxp</groupId>
+  <artifactId>${projectName}</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>winning-pbc-multi-modules-project</name>
+  <modules>
+    <#list moduleList as module>
+        <module>${module.moduleName}</module>
+    </#list>
+  </modules>
+  <distributionManagement>
+    <repository>
+      <id>winning-releases</id>
+      <url><#noparse>${</#noparse>maven.host<#noparse>}</#noparse>/repository/winning-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>winning-snapshots</id>
+      <url><#noparse>${</#noparse>maven.host<#noparse>}</#noparse>/repository/winning-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <properties>
+    <maven.compiler.target><#noparse>${</#noparse>java.version<#noparse>}</#noparse></maven.compiler.target>
+    <java.version>1.8</java.version>
+    <maven.compiler.source><#noparse>${</#noparse>java.version<#noparse>}</#noparse></maven.compiler.source>
+    <project.manifest.gene>project.manifest.gene</project.manifest.gene>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.host>${mavenHost}</maven.host>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <!-- 下面的配置用来定义要启动的非工程模块，例如1.3.1.0版本的winning-winex-person模块。如果有多个可以用分号分割，不可换行。 -->
+    <!--<pbc.modules>com.winning.person:winning-winex-person:1.3.1.0-SNAPSHOT;</pbc.modules>-->
+  </properties>
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>winning-local-nexus</id>
+      <url><#noparse>${</#noparse>maven.host<#noparse>}</#noparse>/repository/maven-public/</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>winning-local-nexus</id>
+      <url><#noparse>${</#noparse>maven.host<#noparse>}</#noparse>/repository/maven-public/</url>
+    </pluginRepository>
+  </pluginRepositories>
+</project>
