@@ -2,6 +2,7 @@ package com.winning.pbc.plugin;
 
 import com.winning.mde.module.MSModuleType;
 import com.winning.pbc.model.*;
+import com.winning.pbc.utils.StartScriptCreater;
 import com.winning.pbc.utils.Utils;
 import com.winning.pbc.utils.WorkspaceRunManagerCreater;
 import org.apache.commons.io.FileUtils;
@@ -43,6 +44,9 @@ public class PBCGenerateHomeMojo extends AbstractMojo {
     @Component
     private ProjectBuilder projectBuilder;
 
+    @Parameter(required = true,defaultValue = "false",property = "createStartScript")
+    public boolean isCreateStartScript;
+
     @Parameter(defaultValue = "${session}", readonly = true, required = true)
     private MavenSession session;
 
@@ -55,7 +59,16 @@ public class PBCGenerateHomeMojo extends AbstractMojo {
             }catch(Throwable e){
                 this.getLog().warn("向workspace.xml写入启动配置失败："+e.getMessage());
                 this.getLog().warn("这个问题不会影响home生成，处理该问题后，后续可通过 mvn winning-pbc:init-run 或当前命令再次尝试生成,具体异常信息如下");
-                this.getLog().warn(e);
+                this.getLog().error(e);
+            }
+            if(this.isCreateStartScript){
+                try{
+                    this.getLog().info("开始生成启动脚本文件");
+                    StartScriptCreater.generateStartScript(project);
+                }catch(Throwable e){
+                    this.getLog().warn("生成启动脚本失败:"+e.getMessage());
+                    this.getLog().warn(e);
+                }
             }
         }
     }

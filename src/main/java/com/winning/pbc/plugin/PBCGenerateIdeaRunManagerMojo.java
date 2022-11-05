@@ -1,5 +1,6 @@
 package com.winning.pbc.plugin;
 
+import com.winning.pbc.utils.StartScriptCreater;
 import com.winning.pbc.utils.Utils;
 import com.winning.pbc.utils.WorkspaceRunManagerCreater;
 import org.apache.maven.execution.MavenSession;
@@ -29,6 +30,9 @@ public class PBCGenerateIdeaRunManagerMojo extends AbstractMojo {
     @Parameter(defaultValue = "${session}", readonly = true, required = true)
     private MavenSession session;
 
+    @Parameter(required = true,defaultValue = "false",property = "createStartScript")
+    public boolean isCreateStartScript;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         MavenProject project = session.getCurrentProject();
@@ -37,6 +41,15 @@ public class PBCGenerateIdeaRunManagerMojo extends AbstractMojo {
                 WorkspaceRunManagerCreater.generateRunManagerToWorkspace(project);
             }catch(Throwable e){
                 this.getLog().error("向workspace.xml写入启动配置失败",e);
+            }
+            if(this.isCreateStartScript){
+                try{
+                    this.getLog().info("开始生成启动脚本文件");
+                    StartScriptCreater.generateStartScript(project);
+                }catch(Throwable e){
+                    this.getLog().warn("生成启动脚本失败:"+e.getMessage());
+                    this.getLog().warn(e);
+                }
             }
         }
     }

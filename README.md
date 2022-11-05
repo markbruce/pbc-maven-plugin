@@ -85,6 +85,7 @@ ps. 如果已经生成过一次，可以使用-Doverwrite 覆盖生成
 ## init-home 使用方式
 
 ```bash
+    #包含开关 -DcreateStartScript
     mvn pbc:init-home
 ```
 此命令会进行以下动作
@@ -101,21 +102,23 @@ ps. 如果已经生成过一次，可以使用-Doverwrite 覆盖生成
 ```
 2. 解析当前工程的依赖
 3. 读取pom.xml中 properties 内的属性<span><pbc.modules></pbc.modules></span>,此属性用于下载
-目录中不存在代码的模块，格式为 groupId:artifactId:version , 多个时使用分号<span>;</span>分割;
+   目录中不存在代码的模块，格式为 groupId:artifactId:version , 多个时使用分号<span>;</span>分割;
 4. 解析工程依赖，判断工程对pbc框架的依赖版本，若当前工程不包含框架的源码，则将框架的 pom信息也加入到步骤3
-的解析结果中
+   的解析结果中
 5. 下载步骤 3、4 中解析到的模块
 6. 结合工程的依赖与下载的模块在 modules中按模块生成依赖列表
 7. 根据框架版本拉取启动器jar包放入launcher目录中
 8. 根据目录中的工程按模块生成ms_dev中的工程模块列表
 9. 结合工程及下载的模块在startinfo中生成启动列表
-10. 在 .idea/workspace.xml中生成idea的启动配置项
+10. 在 .idea/workspace.xml中生成idea的启动配置项\
+11. 如果使用了-DcreateStartScript 开关，则在当前工程目录下会生成 startup脚本，用于直接启动程序
 
 ## init-run 使用方式
 
 ```bash
+    #包含开关 -DcreateStartScript
     mvn pbc:init-run
 ```
 
 此命令将在.idea/workspace.xml中生成idea的启动配置，与init-home的步骤10 相同
-
+如果使用了-DcreateStartScript 开关，则在当前工程目录下会生成 startup脚本，用于直接启动程序,与init-home的步骤11相同
