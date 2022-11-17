@@ -10,6 +10,13 @@ public class MSDevComp {
 
         }
 
+    /**
+     *
+     * @param id
+     * @param scope
+     * @param jarName
+     * @param jarPath
+     */
         public MSDevComp(String id, String scope, String jarName, String jarPath) {
             this.id = id;
             this.scope = scope;

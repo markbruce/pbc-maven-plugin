@@ -25,6 +25,13 @@ public class PBCArtifact {
             this.type = type;
         }
 
+        public PBCArtifact(Artifact artifact){
+            this.groupId = artifact.getGroupId();
+            this.artifactId = artifact.getArtifactId();
+            this.version = artifact.getBaseVersion();
+            this.type = artifact.getType();
+        }
+
         public String getGroupId() {
             return groupId;
         }

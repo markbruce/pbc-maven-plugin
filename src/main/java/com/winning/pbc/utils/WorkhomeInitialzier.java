@@ -345,6 +345,7 @@ public class WorkhomeInitialzier {
                     } else if (MSModuleType.SpringBootWebModule.name().equalsIgnoreCase(moduleType)) {
                         msDevGenerateContext.setWebAppPath(webAppPath);
                         msDevGenerateContext.setModuleType(MSModuleType.SpringBootWebModule.name());
+                        //TODO 如果springbootweb也需要生成tmts_module的话，放开注释的部分
                         webModule = new TmtsModuleGenerateContext.WebModule();
                         webModule.setName(msDevGenerateContext.getModuleName());
                     } else if (webAppPath != null) {

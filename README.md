@@ -1,8 +1,9 @@
 # PBC MAVEN 插件使用手册
 ## 命令及开关列表
 ### mvn pbc:init-pom -Doverwrite
-### mvn pbc:init-home
-### mvn pbc:init-run
+### mvn pbc:init-home -DcreateStartScript
+### mvn pbc:init-run -DcreateStartScript
+### mvn pbc:package 
 
 ## init-pom 使用方式
 1.  新建工程目录，例如 outpatient-aaio
@@ -119,6 +120,11 @@ ps. 如果已经生成过一次，可以使用-Doverwrite 覆盖生成
     #包含开关 -DcreateStartScript
     mvn pbc:init-run
 ```
-
 此命令将在.idea/workspace.xml中生成idea的启动配置，与init-home的步骤10 相同
 如果使用了-DcreateStartScript 开关，则在当前工程目录下会生成 startup脚本，用于直接启动程序,与init-home的步骤11相同
+
+## mvn pbc:package
+```bash
+   mvn pbc:package
+```
+此命令将在.idea/target/ 目录下生成当前工程对应的制品结果modules目录

@@ -24,6 +24,7 @@ public class ModuleXmlInModulesGenerateContext {
         this.moduleName = moduleName;
         this.moduleType = moduleType;
         this.order = order;
+        this.compList = new ArrayList<>();
     }
 
     public String getModuleName() {
