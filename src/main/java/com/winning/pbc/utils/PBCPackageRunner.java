@@ -11,15 +11,13 @@ import org.apache.maven.project.ProjectBuilder;
 import org.codehaus.plexus.logging.Logger;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PBCPackageRunner {
 
-    public static void doPackage(MavenSession session, ProjectBuilder projectBuilder, Logger logger) throws IOException {
+    public static void doPackage(MavenSession session, ProjectBuilder projectBuilder, Logger logger,boolean isSkipAkso) throws IOException {
         MavenProject topProject = session.getTopLevelProject();
         Map<MavenProject, List<MavenProject>> parentToChildrenProjectMapping = new ConcurrentHashMap<>();
         Map<MavenProject, File> projectToDirMapping = new ConcurrentHashMap<>();
@@ -69,6 +67,9 @@ public class PBCPackageRunner {
                     }
                 }
             }
+        }
+        if(isSkipAkso){
+            requireAkso = false;
         }
         logger.info("模块---->目录："+projectToDirMapping.size());
         logger.info("目录---->模块："+dirToProjectMapping.size());
@@ -188,6 +189,9 @@ public class PBCPackageRunner {
                     break;
                 case "winex.appfw":
                     moduleXmlGenerateContext.setOrder("2");
+                    break;
+                case "winning-dtc-Coordinator":
+                    moduleXmlGenerateContext.setOrder("3");
                     break;
                 default:
                     moduleXmlGenerateContext.setOrder("60");

@@ -7,6 +7,7 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,6 +45,7 @@ public class AksoPbcUtil {
                         for (String mainProjectName : mainProjectNames) {
                             if (checkName.equalsIgnoreCase(mainProjectName)) {
                                 skip = false;
+                                break;
                             }
                         }
                         if (skip == null) {
@@ -70,7 +72,7 @@ public class AksoPbcUtil {
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(f);
-                String s = new String(readAll(fis), "UTF-8");
+                String s = new String(readAll(fis), StandardCharsets.UTF_8);
                 if (s != null) {
                     Set r = new HashSet();
                     String[] pss = s.split(",");
@@ -83,7 +85,6 @@ public class AksoPbcUtil {
                     return r;
                 }
             } catch (FileNotFoundException e) {
-            } catch (UnsupportedEncodingException e) {
             } finally {
                 if (fis != null) {
                     try {
@@ -116,7 +117,7 @@ public class AksoPbcUtil {
                         currentPbcClassPaths.add(pbcClassPath);
                         break;
                     }
-                    
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -163,10 +164,7 @@ public class AksoPbcUtil {
      */
     public static boolean haveAkso4PbcFile(String workPath,String moduleName) {
         String[] pbcClassPaths = getPbcClasspaths(workPath,moduleName);
-        if (pbcClassPaths != null && pbcClassPaths.length > 0) {
-            return true;
-        }
-        return false;
+        return pbcClassPaths != null && pbcClassPaths.length > 0;
     }
 
 

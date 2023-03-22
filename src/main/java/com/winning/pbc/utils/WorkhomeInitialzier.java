@@ -14,10 +14,12 @@ import org.codehaus.plexus.logging.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class WorkhomeInitialzier {
-    public static void initWorkHome(MavenSession session, ProjectBuilder projectBuilder, Logger logger){
+
+    public static void initWorkHome(MavenSession session, ProjectBuilder projectBuilder, Logger logger,boolean isSkipAkso){
         logger.info("开始构建启动环境");
         boolean isSingleModuleProject = Utils.isSingleModuleProject(session);
         logger.info("判定框架版本");
@@ -27,44 +29,53 @@ public class WorkhomeInitialzier {
         boolean requireCcp = false;
         boolean haveAksoProject = false;
         boolean requireAkso = false;
-        outer:  for (MavenProject allProject : session.getAllProjects()) {
-            if(allProject.getGroupId().equals("com.winning")&& allProject.getArtifactId().equals("ccp.server")){
+        for (MavenProject allProject : session.getAllProjects()) {
+            if (allProject.getGroupId().equals("com.winning") && allProject.getArtifactId().equals("ccp.server")) {
                 haveCcpProject = true;
-                if(version == null){
+                if (version == null) {
                     version = allProject.getVersion();
                 }
             }
-            if(allProject.getGroupId().equals("com.winning")&& allProject.getArtifactId().equals("winex.appfw")){
+            if (allProject.getGroupId().equals("com.winning") && allProject.getArtifactId().equals("winex.appfw")) {
                 haveAksoProject = true;
-                if(version == null){
+                if (version == null) {
                     version = allProject.getVersion();
                 }
             }
-            if(haveCcpProject && haveAksoProject && launchArtifact!=null){
+            if (haveCcpProject && haveAksoProject && launchArtifact != null) {
                 break;
             }
-            if(requireAkso && requireCcp && launchArtifact!=null){
+            if (requireAkso && requireCcp && launchArtifact != null) {
                 continue;
             }
             for (Artifact artifact : allProject.getArtifacts()) {
-                if(artifact.getGroupId().equals("com.winning") ){
-                    if(artifact.getArtifactId().startsWith("ccp.server")){
-                        requireCcp=true;
-                        if(version==null){
-                            logger.info(String.format("获取到工程%s的框架依赖项%s版本为%s,以此作为生成依据",allProject.getName(),artifact.getGroupId()+":"+artifact.getArtifactId(),artifact.getBaseVersion()));
+                if (artifact.getGroupId().equals("com.winning")) {
+                    if (artifact.getArtifactId().startsWith("ccp.server")) {
+                        requireCcp = true;
+                        if (version == null) {
+                            logger.info(String.format("获取到工程%s的框架依赖项%s版本为%s,以此作为生成依据", allProject.getName(), artifact.getGroupId() + ":" + artifact.getArtifactId(), artifact.getBaseVersion()));
                             version = artifact.getBaseVersion();
                         }
-                    }else if(artifact.getArtifactId().startsWith("appfw")){
+                    } else if (artifact.getArtifactId().startsWith("appfw")) {
                         requireAkso = true;
-                        if(version == null){
-                            logger.info(String.format("获取到工程%s的框架依赖项%s版本为%s,以此作为生成依据",allProject.getName(),artifact.getGroupId()+":"+artifact.getArtifactId(),artifact.getBaseVersion()));
+                        if (version == null) {
+                            logger.info(String.format("获取到工程%s的框架依赖项%s版本为%s,以此作为生成依据", allProject.getName(), artifact.getGroupId() + ":" + artifact.getArtifactId(), artifact.getBaseVersion()));
                             version = artifact.getBaseVersion();
                         }
-                    }else if(artifact.getArtifactId().equals("launch")){
+                    } else if (artifact.getArtifactId().equals("launch")) {
                         launchArtifact = artifact;
                     }
                 }
             }
+        }
+        if(StringUtils.isBlank(version)){
+            logger.warn("未获取到框架版本，默认使用4.0.0-SNAPSHOT,默认启用ccp+akso");
+            version="4.0.0-SNAPSHOT";
+            requireCcp = true;
+            requireAkso = true;
+        }
+        if(isSkipAkso){
+            requireAkso = false;
         }
         logger.info("框架版本:"+version);
         logger.info("初始化目录结构");
@@ -161,9 +172,12 @@ public class WorkhomeInitialzier {
                         pomFileForDownload = Utils.generateTempPom(moduleArtifactList,modulePomModel);
                         submodulePomResult = projectBuilder.build(pomFileForDownload,request);
                         List<Artifact> buildClassPathList = new ArrayList<>();
-                        submodulePomResult.getProject().getArtifacts().forEach(moduleArtifact ->{
+                        for (Artifact moduleArtifact : submodulePomResult.getProject().getArtifacts()) {
                             buildClassPathList.add(moduleArtifact);
-                        });
+                            if (launchArtifact == null && moduleArtifact.getArtifactId().equals("launch")) {
+                                launchArtifact = moduleArtifact;
+                            }
+                        }
                         moduleFolderToModuleMap.put(currentModuleFolder,new PBCModule(modulePomBuildResult.getProject(),new HashSet<>(),null,null,moduleArtifactList));
                         moduleFolderToModuleMap.get(currentModuleFolder).getClasspathSet().addAll(buildClassPathList);
                         logger.info("写入无工程模块的module.xml文件");
@@ -181,6 +195,9 @@ public class WorkhomeInitialzier {
                                 break;
                             case "winex.appfw":
                                 moduleXmlGenerateContext.setOrder("2");
+                                break;
+                            case "winning-dtc-Coordinator":
+                                moduleXmlGenerateContext.setOrder("3");
                                 break;
                             default:
                                 moduleXmlGenerateContext.setOrder("60");
@@ -227,7 +244,7 @@ public class WorkhomeInitialzier {
             for (int i = 0; i < session.getAllProjects().size(); i++) {
                 MavenProject currProject = session.getAllProjects().get(i);
                 File moduleFolder = currProject.getBasedir();
-                if (moduleFolder.getParentFile().equals(toplevelFolder)) {
+                if (moduleFolder.getParentFile().equals(toplevelFolder)&&!Objects.equals(currProject.getProperties().getProperty("PBCSkip"),"true")) {
 
                     moduleFolderToModuleMap.put(moduleFolder,new PBCModule(currProject,new HashSet<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<PBCArtifact>()));
                     logger.info("---->获取到模块:"+currProject.getGroupId()+":"+currProject.getArtifactId()+":"+currProject.getVersion());
@@ -313,7 +330,7 @@ public class WorkhomeInitialzier {
             try {
                 FileUtils.write(
                         new File(Utils.getOrMkdirs(new File(homeModulesDir,pbcModule.getMavenProject().getArtifactId()).getAbsolutePath()+"/public/lib"),"classpath.txt")
-                        ,StringUtils.join(classPathToWriteList,File.pathSeparator + System.lineSeparator()), Charset.forName("UTF-8"));
+                        ,StringUtils.join(classPathToWriteList,File.pathSeparator + System.lineSeparator()), StandardCharsets.UTF_8);
                 logger.info("---->写入依赖文件"+new File(homeModulesDir,pbcModule.getMavenProject().getArtifactId()).getAbsolutePath()+"/public/lib/classpath.txt");
                 startInfoContext.getModuleNameList().add(pbcModule.getMavenProject().getArtifactId());
                 logger.info("---->加入启动列表:"+pbcModule.getMavenProject().getArtifactId());
@@ -329,6 +346,9 @@ public class WorkhomeInitialzier {
                             break;
                         case "winex.appfw":
                             order = "2";
+                            break;
+                        case "winning-dtc-Coordinator":
+                            order = "3";
                             break;
                         default:
                             order = "60";

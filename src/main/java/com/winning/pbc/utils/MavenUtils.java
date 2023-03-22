@@ -97,6 +97,9 @@ public class MavenUtils {
                         case "winex.appfw":
                             moduleXmlGenerateContext.setOrder("2");
                             break;
+                        case "winning-dtc-Coordinator":
+                            moduleXmlGenerateContext.setOrder("3");
+                            break;
                         default:
                             moduleXmlGenerateContext.setOrder("60");
                     }

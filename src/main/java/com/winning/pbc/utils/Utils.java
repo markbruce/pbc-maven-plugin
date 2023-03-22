@@ -126,6 +126,8 @@ public class Utils {
                 return -3;
             case "winex.appfw":
                 return -2;
+            case "winning-dtc-Coordinator":
+                return -1;
             default:
                 return 0;
         }

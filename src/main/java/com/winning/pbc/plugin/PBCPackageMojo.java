@@ -24,6 +24,9 @@ public class PBCPackageMojo extends AbstractMojo {
     @Parameter(required = false,defaultValue = "",property = "outputPath")
     public boolean isCreateStartScript;
 
+    @Parameter(required = true,defaultValue = "false",property = "skipAkso")
+    public boolean isSkipAkso;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
     }

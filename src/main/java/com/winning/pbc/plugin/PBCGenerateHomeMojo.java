@@ -1,32 +1,17 @@
 package com.winning.pbc.plugin;
 
-import com.winning.mde.module.MSModuleType;
-import com.winning.pbc.model.*;
 import com.winning.pbc.utils.StartScriptCreater;
-import com.winning.pbc.utils.Utils;
 import com.winning.pbc.utils.WorkspaceRunManagerCreater;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Model;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.*;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE_PLUS_RUNTIME;
@@ -46,6 +31,9 @@ public class PBCGenerateHomeMojo extends AbstractMojo {
 
     @Parameter(required = true,defaultValue = "false",property = "createStartScript")
     public boolean isCreateStartScript;
+
+    @Parameter(required = true,defaultValue = "false",property = "skipAkso")
+    public boolean isSkipAkso;
 
     @Parameter(defaultValue = "${session}", readonly = true, required = true)
     private MavenSession session;

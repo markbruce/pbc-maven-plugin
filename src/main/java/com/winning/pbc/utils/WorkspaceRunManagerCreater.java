@@ -53,7 +53,7 @@ public class WorkspaceRunManagerCreater {
                     //VM_PARAMETERS
                     Element optionElem = Utils.createElement(applicationConfigurationElem,"option");
                     optionElem.addAttribute("name","VM_PARAMETERS");
-                    optionElem.addAttribute("value","-cp $PROJECT_DIR$/.idea/home/launcher/launch-0.0.2-SNAPSHOT.jar -Xms1g -Xmx5g -Dtmts.runMode=develop -Dorg.eclipse.jetty.server.Request.maxFormContentSize=10485760 -Ddatabase.show.sql=false -Djava.awt.headless=true\" ");
+                    optionElem.addAttribute("value","-cp $PROJECT_DIR$/.idea/home/launcher/launch-0.0.2-SNAPSHOT.jar -Xms1g -Xmx5g -Dtmts.runMode=develop -Dorg.eclipse.jetty.server.Request.maxFormContentSize=10485760 -Ddatabase.show.sql=false -Djava.awt.headless=true ");
                 }
                 {
                     //method
@@ -84,7 +84,7 @@ public class WorkspaceRunManagerCreater {
                     //VM_PARAMETERS
                     Element optionElem = Utils.createElement(jarConfigurationElem,"option");
                     optionElem.addAttribute("name","VM_PARAMETERS");
-                    optionElem.addAttribute("value","-cp $PROJECT_DIR$/.idea/home/launcher/launch-0.0.2-SNAPSHOT.jar -Xms1g -Xmx5g -Dtmts.runMode=develop -Dorg.eclipse.jetty.server.Request.maxFormContentSize=10485760 -Ddatabase.show.sql=false -Djava.awt.headless=true\" ");
+                    optionElem.addAttribute("value","-cp $PROJECT_DIR$/.idea/home/launcher/launch-0.0.2-SNAPSHOT.jar -Xms1g -Xmx5g -Dtmts.runMode=develop -Dorg.eclipse.jetty.server.Request.maxFormContentSize=10485760 -Ddatabase.show.sql=false -Djava.awt.headless=true ");
                 }
                 {
                     //PROGRAM_PARAMETERS

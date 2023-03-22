@@ -1,7 +1,7 @@
 # PBC MAVEN 插件使用手册
 ## 命令及开关列表
 ### mvn pbc:init-pom -Doverwrite
-### mvn pbc:init-home -DcreateStartScript
+### mvn pbc:init-home -DcreateStartScript -DskipAkso
 ### mvn pbc:init-run -DcreateStartScript
 ### mvn pbc:package 
 
@@ -86,7 +86,7 @@ ps. 如果已经生成过一次，可以使用-Doverwrite 覆盖生成
 ## init-home 使用方式
 
 ```bash
-    #包含开关 -DcreateStartScript
+    #包含开关 -DcreateStartScript -DskipAkso
     mvn pbc:init-home
 ```
 此命令会进行以下动作
@@ -113,6 +113,7 @@ ps. 如果已经生成过一次，可以使用-Doverwrite 覆盖生成
 9. 结合工程及下载的模块在startinfo中生成启动列表
 10. 在 .idea/workspace.xml中生成idea的启动配置项\
 11. 如果使用了-DcreateStartScript 开关，则在当前工程目录下会生成 startup脚本，用于直接启动程序
+12. 如果使用了-DskipAkso开关，则当工程中没有akso代码时，跳过akso模块的下载与依赖计算（目前主要运维平台本地开发须增加此开关）
 
 ## init-run 使用方式
 
@@ -125,6 +126,8 @@ ps. 如果已经生成过一次，可以使用-Doverwrite 覆盖生成
 
 ## mvn pbc:package
 ```bash
+   #包含开关 -DskipAkso
    mvn pbc:package
 ```
 此命令将在.idea/target/ 目录下生成当前工程对应的制品结果modules目录
+如果使用了-DskipAkso开关，则当工程中没有akso代码时，跳过akso模块的下载与依赖计算（目前主要运维平台本地开发须增加此开关）
